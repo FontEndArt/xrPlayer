@@ -1,0 +1,25 @@
+{
+  "name": "xr_player",
+  "version": "1.0.0",
+  "description": "canvas播放器",
+  "main": "lib/xrPlayer.cjs.js",
+  "module": "lib/xrPlayer.esm.js",
+  "browser": "lib/xrPlayer.umd.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "dev": "node ./scripts/dev.js --env.NODE_ENV=dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "xiaoranzife <xiaoranzife@163.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "execa": "^4.0.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-uglify": "^6.0.4"
+  }
+}
