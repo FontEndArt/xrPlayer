@@ -1,33 +1,39 @@
-// import babel from 'rollup-plugin-babel';
+import babel from 'rollup-plugin-babel';
 import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import replace from 'rollup-plugin-replace';
-import uglify from 'rollup-plugin-uglify'; // 压缩包
+import clear from 'rollup-plugin-clear';
+import { uglify } from 'rollup-plugin-uglify'; // 压缩包
+import copy from 'rollup-plugin-copy';
 
 import pkg from './package.json';
 
-// const babelConfig = {
-//     umd: {
-//         presets: [
-//             ['@babel/env', {
-//                 modules: false,
-//                 targets: {
-//                     browsers: ['last 2 versions', 'not ie <= 8'],
-//                 },
-//             }],
-//         ],
-//         exclude: 'node_modules/**',
-//         plugins: [
-//             '@babel/plugin-syntax-dynamic-import',
-//             'lodash',
-//         ],
-//         externalHelpers: true,
-//         runtimeHelpers: true,
-//         babelrc: false,
-//     }
-// };
+const babelConfig = {
+    umd: {
+        presets: [
+            ['@babel/env', {
+                modules: false,
+                targets: {
+                    "chrome": "46",
+                    "ie": "10"
+                    // browsers: ['last 2 versions', 'not ie <= 8'],
+                },
+            }],
+        ],
+        exclude: 'node_modules/**',
+        plugins: [
+            "array-includes",
+            'lodash',
+        ],
+        externalHelpers: true,
+        runtimeHelpers: true,
+        babelrc: false,
+    }
+};
 
-const env = process.env.NODE_ENV;
+const env = process.env.NODE_ENV.trim();
+
+const isdev = (env == "development");
 
 
 const config = [
@@ -36,12 +42,15 @@ const config = [
         // external: ['lodash'],
         output: {
             name: "xrPlayer",
-            file: pkg.browser,
+            file: isdev ? pkg.browser : `./dist/xrplayer.min.js`,
             format: 'umd',
-            sourcemap: true
+            sourcemap: isdev ? true : false
+        },
+        watch: {
+            exclude: 'node_modules/**'
         },
         plugins: [
-            // babel(babelConfig['umd']),
+            babel(babelConfig['umd']),
             resolve({
                 jsnext: true,
                 main: true,
@@ -52,12 +61,44 @@ const config = [
                 }
             }),
             replace({
-              'process.env.NODE_ENV': JSON.stringify(env)
+                'process.env.NODE_ENV': JSON.stringify(env)
             }),
             commonjs(),
         ]
-    },
-    {
+    }
+];
+
+
+if (env === 'production') {
+    config.map(
+        item => item.plugins.unshift(
+            copy({
+                targets: [
+                    // { src: 'public/*', dest: 'dist/' },
+                    { src: ['public/player.css', 'public/fonts/*'], dest: 'dist/' },
+                    // { src: 'assets/images/**/*', dest: 'dist/public/images' }
+                ]
+            }),
+            clear({
+                // required, point out which directories should be clear.
+                targets: ['dist'],
+                // optional, whether clear the directores when rollup recompile on --watch mode.
+                // watch: true, // default: false
+            }),
+            // uglify({
+            //     compress: {
+            //         // pure_getters: true,
+            //         // unsafe: true,
+            //         // unsafe_comps: true,
+            //     },
+            //     output: {
+            //         // comments: "all",
+            //     }
+            // })
+        )
+    )
+} else {
+    config.push({
         input: 'src/index.js',
         // external: ['lodash'],
         output: [
@@ -72,24 +113,12 @@ const config = [
                 // sourcemap: true
             },
         ],
+        watch: {
+            exclude: 'node_modules/**'
+        },
         plugins: [
         ]
-    }
-];
-
-
-if (env === 'production') {
-    config.map(
-        item => item.plugins.push(
-            uglify({
-                compress: {
-                    pure_getters: true,
-                    unsafe: true,
-                    unsafe_comps: true,
-                    warnings: false
-                }
-            })
-        )
-    )
+    })
 }
+
 export default config;

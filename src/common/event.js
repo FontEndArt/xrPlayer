@@ -64,37 +64,42 @@ export const fullScreen = function () {
 export const progressEvent = function () {
     const _self = this;
     const video = this.videoEl;
+    const playerDom = this.domEl.playerDom;
     const progress = this.domEl.progressBarContainerDom;
 
     // 进度条事件
-    // TODO: 移除JQ相关
     progress.addEventListener("mousedown", function (event) {
-        console.log(this.offset);
-        var progressLeft = $(this).offset().left;
-        var progressWidth = $(this).width();
+        const progressLeft = this.getBoundingClientRect().left;
+        const progressWidth = this.offsetWidth;
+        const html = document.getElementsByTagName("html")[0];
 
-        $(document).on("mousemove", function (event) {
-            var left = (event.pageX - progressLeft) / progressWidth;
+        function docMove(event) {
+            let left = (event.pageX - progressLeft) / progressWidth;
+            if (left < 0) { left = 0 }
+            if (left > 1) { left = 1 }
+            video.currentTime = left * video.duration;
+            setProgressLine.call(_self);
+            html.style.cursor = "pointer";
+        }
+        function docUp(event) {
+            let left = (event.pageX - progressLeft) / progressWidth;
             if (left < 0) { left = 0 }
             if (left > 1) { left = 1 }
             video.currentTime = left * video.duration
             setProgressLine.call(_self);
-            $("html").css("cursor", "pointer");
-        }).on("mouseup", function (event) {
-            var left = (event.pageX - progressLeft) / progressWidth;
-            if (left < 0) { left = 0 }
-            if (left > 1) { left = 1 }
-            video.currentTime = left * video.duration
-            setProgressLine.call(_self);
-            $("html").css("cursor", "auto");
-            $(document).off("mousemove").off("mouseup");
+            html.style.cursor = "auto";
+            document.removeEventListener("mousemove", docMove);
+            document.removeEventListener("mouseup", docUp);
             clearInterval(_self.Timer);
             videoPlay.call(_self);
-        })
-    })
+        }
+
+        document.addEventListener("mousemove", docMove)
+        document.addEventListener("mouseup", docUp)
+
+    });
 }
 
-// TODO: 移除JQ相关
 export const voiceEvent = function () {
     const _self = this;
     const video = this.videoEl;
@@ -112,27 +117,32 @@ export const voiceEvent = function () {
     })
     // 音量
     voiceDom.addEventListener("mousedown", function (event) {
-        var voiceLeft = $(this).offset().left;
-        var voiceWidth = $(this).width();
+        const voiceLeft = this.getBoundingClientRect().left;
+        const voiceWidth = this.offsetWidth;
+        const html = document.getElementsByTagName("html")[0];
 
-        $(document).on("mousemove", function (event) {
-            var left = (event.pageX - voiceLeft) / voiceWidth;
+        function docMove(event) {
+            let left = (event.pageX - voiceLeft) / voiceWidth;
             if (left < 0) { left = 0 }
             if (left > 1) { left = 1 }
             setVolume.call(_self, left);
-            $("html").css("cursor", "pointer");
-        }).on("mouseup", function (event) {
-            var left = (event.pageX - voiceLeft) / voiceWidth;
+            html.style.cursor = "pointer";
+        }
+        function docUp(event) {
+            let left = (event.pageX - voiceLeft) / voiceWidth;
             if (left < 0) { left = 0 }
             if (left > 1) { left = 1 }
             setVolume.call(_self, left);
-            $("html").css("cursor", "auto");
-            $(document).off("mousemove").off("mouseup");
-        })
+            html.style.cursor = "auto";
+            document.removeEventListener("mousemove", docMove);
+            document.removeEventListener("mouseup", docUp);
+        }
+
+        document.addEventListener("mousemove", docMove)
+        document.addEventListener("mouseup", docUp)
     })
 }
 
-// TODO: 移除JQ相关
 export const keyboardEvent = function () {
     const _self = this;
     const playerDom = this.domEl.playerDom;
@@ -140,7 +150,7 @@ export const keyboardEvent = function () {
     // 是否是播放页
     if (!_self.options.playerPage) {
         // 是否播放的状态切换
-        $(document).on("click", function () {
+        document.addEventListener("click", function () {
             _self.isPlayer = false;
         });
         playerDom.addEventListener("click", function () {
@@ -148,17 +158,17 @@ export const keyboardEvent = function () {
             _self.isPlayer = true;
         });
 
-        $(document).keypress(function (event) {
+        document.onkeypress = function (event) {
             event.preventDefault();
             event.stopPropagation();
             if (_self.isPlayer) {
                 handleKeyboard.call(_self, event)
             }
-        });
+        };
     } else {
-        $(document).keypress(function (event) {
+        document.onkeypress = function (event) {
             handleKeyboard.call(_self, event);
-        });
+        };
     }
 }
 

@@ -45,6 +45,7 @@ function getClassNameArr(className) {
 }
 
 export function addClass(name) {
+    console.log(this);
     const classNameArr = getClassNameArr(this.className);
     if (name.split(" ").length < 2) {
         if (!classNameArr.includes(name.trim())) {

@@ -1,3 +1,4 @@
+import { assignIn } from "lodash";
 import { defaultOptions } from "./config.js";
 import initPlayer from "./view/initPlayer.js";
 import common from "./common/index.js";
@@ -6,13 +7,24 @@ import common from "./common/index.js";
 //->https://xxx.com/ProjectName/statics/xjo/
 (function (defaultOptions) {
     const tags = document.getElementsByTagName("script");
-    const path = tags[tags.length - 1].getAttribute("src");
-    defaultOptions.basePath = path.substring(0, path.lastIndexOf("/") + 1);
+    try {
+        let path = tags[tags.length - 1].getAttribute("src");
+        const basePath = path.substring(0, path.lastIndexOf("/") + 1);
+        defaultOptions.basePath = path.substring(0, path.lastIndexOf("/") + 1);
+    } catch {
+        for (let i = 0; i < tags.length; i++) {
+            let item = tags[i];
+            if (item.getAttribute("src") && (item.getAttribute("src").indexOf("xr_player") > -1)) {
+                let path = item.getAttribute("src");
+                defaultOptions.basePath = path.substring(0, path.lastIndexOf("/") + 1);
+            }
+        }
+    }
 })(defaultOptions)
 
 function xrPlayer(options) {
-    // TODO: 深拷贝目前是JQuery，考虑换到lodash
-    this.options = $.extend(true, defaultOptions, options);
+    // 合并配置项
+    this.options = assignIn(defaultOptions, options);
 
     // 总变量
     this.Timer = null;

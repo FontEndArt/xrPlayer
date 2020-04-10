@@ -1,3 +1,4 @@
+import { assign } from "lodash";
 import progress from "./control/progress"
 import leftControl from "./control/left_control"
 import rightControl from "./control/right_control"
@@ -82,7 +83,7 @@ export function control(parentDom) {
         voiceDragDom,
         fullDom
     }
-    this.domEl = Object.assign(this.domEl, domObj);
+    this.domEl = assign(this.domEl, domObj);
 
     return domObj
 }

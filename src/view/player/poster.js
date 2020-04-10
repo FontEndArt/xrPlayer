@@ -1,3 +1,4 @@
+import { assign } from "lodash";
 import { setPoster } from "../../common/poster.js"
 
 export function poster(parentDom) {
@@ -12,7 +13,7 @@ export function poster(parentDom) {
         posterDom
     }
 
-    this.domEl = Object.assign(this.domEl, domObj);
+    this.domEl = assign(this.domEl, domObj);
 
     setPoster.call(this);
 

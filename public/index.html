@@ -10,7 +10,6 @@
     <script src="https://cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script>
     <script src="../lib/xrPlayer.umd.js"></script>
     <script>
-        
         new xrPlayer({
             el: "#player-dom",
             src: "./05cacb4e02f9d9e.mp4", // 横屏视频
@@ -18,14 +17,14 @@
             // poster: "./55cf30460fb559ffa5335530279b6df1.jpg", // 竖屏视频封面
             poster: "./wdm.jpg", // 横屏视频封面
             // poster: "./20200408103031.png", // 横屏视频封面
-            volume: 0.6,
+            volume: 0,
             // 自动播放 - 可能会不生效
             // 同时设置autoplay true和volume 0，可能会出现静音播放的情况
             autoplay: true,
             // 宽 默认600
-            // width: "100%",
+            width: "100%",
             // 高 默认 400
-            // height: "200px",
+            height: "200px",
             // 初始播放时间
             currentTime: 0, // s
             // 是否是播放页 - 需要单独演示说明

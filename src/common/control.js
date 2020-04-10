@@ -1,5 +1,6 @@
 import { removeClass, addClass, setCurrentDom } from "./index.js";
 import { hidePoster } from "./poster.js";
+import { setProgressLine } from "./progress.js";
 import { loadCanvas } from "./canvas.js";
 
 // 改变播放器的状态
@@ -40,7 +41,6 @@ export const videoPlay = function () {
             changeStatus.call(_self, false, true); // 切换按钮状态
         }
     }).catch(function (err) {
-        console.log(111);
         // 不支持自动播放
         if (_self.options.autoplay) {
             // 触发式自动播放
@@ -86,7 +86,7 @@ export function changePlayer(event) {
 // 结束视频
 export const EndVideo = function () {
     videoPause.call(this);
-    setCurrentDom(this, 0);
+    setCurrentDom.call(this, 0);
     setProgressLine.call(this);
     changeStatus.call(this, true); // 显示开始
 }

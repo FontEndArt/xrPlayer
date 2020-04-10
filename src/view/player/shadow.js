@@ -1,3 +1,4 @@
+import { assign } from "lodash";
 export function shadow(parentDom) {
     const createChild = this.common.createChild;
     // 屏幕蒙层
@@ -12,7 +13,7 @@ export function shadow(parentDom) {
         startBarDom
     }
 
-    this.domEl = Object.assign(this.domEl, domObj);
+    this.domEl = assign(this.domEl, domObj);
 
     return domObj
 }

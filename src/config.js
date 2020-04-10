@@ -19,7 +19,7 @@ export const defaultCss = [
     {
         name: "xr_icon",
         dev: `//at.alicdn.com/t/font_1741137_x7unuco9bf8.css`,
-        pro: ``,
+        pro: `//at.alicdn.com/t/font_1741137_x7unuco9bf8.css`,
     },
 ]
 

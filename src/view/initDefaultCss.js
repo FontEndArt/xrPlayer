@@ -6,8 +6,8 @@ function isDev () {
 
 export function initDefaultCss() {
     defaultCss.forEach(item => {
-        const cssPath = isDev() ? item.dev : item.pro;
-        cssPath.replace(`{basePath}`, this.options.basePath)
+        let cssPath = isDev() ? item.dev : item.pro;
+        cssPath = cssPath.replace(`{basePath}`, this.options.basePath)
         
         cssPath && this.common.loadCss(cssPath);
     })
