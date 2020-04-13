@@ -85,16 +85,16 @@ if (env === 'production') {
                 // optional, whether clear the directores when rollup recompile on --watch mode.
                 // watch: true, // default: false
             }),
-            // uglify({
-            //     compress: {
-            //         // pure_getters: true,
-            //         // unsafe: true,
-            //         // unsafe_comps: true,
-            //     },
-            //     output: {
-            //         // comments: "all",
-            //     }
-            // })
+            uglify({
+                compress: {
+                    // pure_getters: true,
+                    // unsafe: true,
+                    // unsafe_comps: true,
+                },
+                output: {
+                    // comments: "all",
+                }
+            })
         )
     )
 } else {

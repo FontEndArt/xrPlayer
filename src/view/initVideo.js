@@ -1,4 +1,4 @@
-import { videoEvent } from "../common/video";
+import { videoEvent, loadEvent } from "../common/video";
 
 export function initVideo() {
     const video = document.createElement("video");
@@ -9,6 +9,7 @@ export function initVideo() {
     this.videoEl = video;
 
     videoEvent.call(this, video)
+    this.load = loadEvent.call(this, video)
 }
 
 export default initVideo

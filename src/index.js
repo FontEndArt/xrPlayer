@@ -6,20 +6,27 @@ import common from "./common/index.js";
 // 定义当前js引用路径
 //->https://xxx.com/ProjectName/statics/xjo/
 (function (defaultOptions) {
+    function find(str, cha, num) {
+        var x = str.indexOf(cha);
+        for (var i = 0; i < num - 1; i++) {
+            x = str.indexOf(cha, x + 1);
+        }
+        return x;
+    }
     const tags = document.getElementsByTagName("script");
     try {
         let path = tags[tags.length - 1].getAttribute("src");
-        const basePath = path.substring(0, path.lastIndexOf("/") + 1);
         defaultOptions.basePath = path.substring(0, path.lastIndexOf("/") + 1);
     } catch {
-        for (let i = 0; i < tags.length; i++) {
+        for (let i = tags.length - 1; i >= 0; i--) {
             let item = tags[i];
-            if (item.getAttribute("src") && (item.getAttribute("src").indexOf("xr_player") > -1)) {
+            if (item.getAttribute("src") && (item.getAttribute("src").indexOf("xrplayer") > -1)) {
                 let path = item.getAttribute("src");
                 defaultOptions.basePath = path.substring(0, path.lastIndexOf("/") + 1);
             }
         }
     }
+    defaultOptions.baseHost = defaultOptions.basePath.substring(0, find(defaultOptions.basePath, "/", 3));
 })(defaultOptions)
 
 function xrPlayer(options) {

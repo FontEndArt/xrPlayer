@@ -6,14 +6,16 @@ export const defaultOptions = {
     autoplay: false,
     // 是否是播放页
     playerPage: true,
-    basePath: ""
+    debug: process.env.NODE_ENV == `development` ? true : false,
+    basePath: "",
+    baseHost: ""
 }
 
 // {basePath}会被替换成当前js引用路径
 export const defaultCss = [
     {
         name: "player",
-        dev: `/public/player.css`,
+        dev: `{baseHost}/public/player.css`,
         pro: `{basePath}/player.css`,
     },
     {

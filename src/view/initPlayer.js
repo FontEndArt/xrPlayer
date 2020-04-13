@@ -7,7 +7,7 @@ import { changeStatus, videoPlay } from "../common/control";
 
 export const initPlayer = function () {
 
-    console.log(this.options);
+    // console.log(this.options);
 
     // 挂载css
     initDefaultCss.call(this);
@@ -29,8 +29,6 @@ export const initPlayer = function () {
     shadow.call(this, playerDom);
     // 控制栏
     control.call(this, playerDom);
-
-    console.log(this.domEl);
 
     // 所有dom构造结束后进行
     initPlayerEvent.call(this);

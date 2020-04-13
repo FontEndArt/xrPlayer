@@ -1,9 +1,11 @@
 import { setDurationDom } from "./index.js";
 import { setProgressLine } from "./progress.js";
-import { changeStatus } from "./control.js";
+import { changePlayer, changeStatus } from "./control.js";
+import { setPoster } from "./poster.js";
 
 
 export function videoEvent(video) {
+    const debug =  this.options.debug;
     video.onloadedmetadata = () => {
         // 设置当前的播放时间点 单位秒
         video.currentTime = this.options.currentTime;
@@ -17,21 +19,33 @@ export function videoEvent(video) {
     };
 
     video.onloadstart = () => {
-        console.log("loadstart")
+        debug && console.log("loadstart")
     };
     video.ondurationchange = () => {
-        console.log("durationchange")
+        debug && console.log("durationchange")
     };
     video.onloadeddata = () => {
-        console.log("loadeddata")
+        debug && console.log("loadeddata")
     };
     video.onprogress = () => {
-        console.log("progress")
+        debug && console.log("progress")
     };
     video.oncanplay = () => {
-        console.log("canplay")
+        debug && console.log("canplay")
     };
     video.oncanplaythrough = () => {
-        console.log("canplaythrough")
+        debug && console.log("canplaythrough")
     };
+}
+
+export function loadEvent (video) {
+    // var _self = this;
+    return function load(options) {
+        video.src = options.src;
+        this.options.autoplay = true;
+
+        changePlayer.call(this);
+
+        setPoster.call(this, options.poster);
+    }.bind(this)
 }

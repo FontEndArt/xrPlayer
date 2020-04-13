@@ -41,11 +41,7 @@ export const fullScreen = function () {
 
         // 修复全屏和取消全屏时候的画面变化
         if (video.paused) {
-            loadCanvas();
-            setTimeout(function () {
-                clearInterval(Timer);
-                Timer = null;
-            }, 0)
+            refreshCanvas.call(_self, true);
         }
     }, false);
 
@@ -86,6 +82,9 @@ export const progressEvent = function () {
             if (left < 0) { left = 0 }
             if (left > 1) { left = 1 }
             video.currentTime = left * video.duration
+            if (video.paused) {
+                changePlayer.call(_self);
+            }
             setProgressLine.call(_self);
             html.style.cursor = "auto";
             document.removeEventListener("mousemove", docMove);
@@ -178,4 +177,11 @@ export const initEvent = function () {
     progressEvent.call(this);
     voiceEvent.call(this);
     keyboardEvent.call(this);
+}
+
+export const addListenerEvent = function () {
+    this.addListenerList = {};
+    return function addListener (eventName, callback) {
+        this.addListenerList[eventName] = callback;
+    }.bind(this);
 }

@@ -1,7 +1,7 @@
 import { removeClass, addClass, setCurrentDom } from "./index.js";
 import { hidePoster } from "./poster.js";
 import { setProgressLine } from "./progress.js";
-import { loadCanvas } from "./canvas.js";
+import { loadCanvas, refreshCanvas } from "./canvas.js";
 
 // 改变播放器的状态
 export function changeStatus(bool, isPaused) {
@@ -31,6 +31,7 @@ export function changeStatus(bool, isPaused) {
 
 // 视频播放
 export const videoPlay = function () {
+    // console.log("videoPlay");
     const _self = this;
     loadCanvas.call(this);
     const promise = this.videoEl.play();
@@ -51,9 +52,10 @@ export const videoPlay = function () {
 
 // 视频暂停
 export const videoPause = function () {
+    // console.log("videoPause");
     const _self = this;
     this.videoEl.pause();
-    loadCanvas.call(this);
+    refreshCanvas.call(this, true);
     setTimeout(function () {
         clearInterval(_self.Timer);
         _self.Timer = null;
@@ -89,6 +91,12 @@ export const EndVideo = function () {
     setCurrentDom.call(this, 0);
     setProgressLine.call(this);
     changeStatus.call(this, true); // 显示开始
+
+    // 监听事件埋点
+    this.addListenerList.ended && this.addListenerList.ended();
+
+    clearInterval(this.Timer);
+    this.Timer = null;
 }
 
 
